@@ -37,7 +37,7 @@ public class Main {
             if (i != path.size()-1)
             sum += path.get(i).parents.get(path.get(i+1)).weight;
         }
-        System.out.println(sum);
+        System.out.println("Длина всего пути " + sum);
     }
 
     /** Дейкстра */
