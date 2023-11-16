@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) {
         int[][] array = new int[SIZE][3];
 
-        HashMap<Integer, Node> graph = createGraph(readFile(array));
+        HashMap<Integer, Node> graph = createGraph(Objects.requireNonNull(readFile(array)));
 
         Node start = graph.get(startI);
         Node end = graph.get(endI);
@@ -37,7 +37,7 @@ public class Main {
             if (i != path.size()-1)
             sum += path.get(i).parents.get(path.get(i+1)).weight;
         }
-        System.out.println("Длина всего пути " + sum);
+        System.out.println("Длина всего пути: " + sum + " дм.");
     }
 
     /** Дейкстра */
@@ -135,6 +135,7 @@ public class Main {
             if (adjacentNode == null) continue;
 
             Edge edge = new Edge(adjacentNode, row[2]);
+            assert node != null;
             node.edges.add(edge);
             adjacentNode.parents.put(node, edge);
 
