@@ -9,7 +9,7 @@ public class Main {
     /** Номер стартового узла */
     private static final int startI = 2;
     /** Номер конечного узла */
-    private static final int endI = 11;
+    private static final int endI = 8;
 
     public static void main(String[] args) {
         int[][] array = new int[SIZE][3];
@@ -25,7 +25,7 @@ public class Main {
         if (linkedList != null){
             getNode(linkedList);
         }else{
-            System.out.println("No");
+            System.out.println("Пути не существует");
         }
     }
 
@@ -150,6 +150,11 @@ public class Main {
             int i = 0;
             while (line != null) {
                 String[] str = line.replace("--","").replace("  " , " ").split(" ");
+
+                if (Objects.equals(str[0], str[1])){
+                    System.out.println("Неправильные входные данные");break;
+                }
+
                 array[i][0] = Integer.parseInt(str[0]);
                 array[i+1][0] = Integer.parseInt(str[1]);
 
