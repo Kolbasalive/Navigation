@@ -9,7 +9,7 @@ public class Main {
     /** Номер стартового узла */
     private static final int startI = 2;
     /** Номер конечного узла */
-    private static final int endI = 8;
+    private static final int endI = 4;
 
     public static void main(String[] args) {
         int[][] array = new int[SIZE][3];
@@ -18,7 +18,7 @@ public class Main {
 
         Node start = graph.get(startI);
         Node end = graph.get(endI);
-        LinkedList<Node> linkedList = getShortestsPath(graph,
+        LinkedList<Node> linkedList = getShortestPath(graph,
                start,
                 end);
 
@@ -29,16 +29,19 @@ public class Main {
         }
     }
 
+    /** Вывод пути */
     public static void getNode(LinkedList<Node> path) {
         int sum = 0;
-        for (Node node : path) {
-            System.out.println(node.value);
-            //sum += node.parents.get(node).weight;
+        for (int i = 0; i < path.size(); i++) {
+            System.out.println(path.get(i).value);
+            if (i != path.size()-1)
+            sum += path.get(i).parents.get(path.get(i+1)).weight;
         }
+        System.out.println(sum);
     }
 
     /** Дейкстра */
-    public static LinkedList<Node> getShortestsPath(HashMap<Integer, Node> graph, Node start, Node end) {
+    public static LinkedList<Node> getShortestPath(HashMap<Integer, Node> graph, Node start, Node end) {
         HashSet<Node> unprocessedNodes = new HashSet<>();
         HashMap<Node, Integer> timeToNodes = new HashMap<>();
         initHashTables(start, graph, unprocessedNodes, timeToNodes);
@@ -149,7 +152,10 @@ public class Main {
 
             int i = 0;
             while (line != null) {
-                String[] str = line.replace("--","").replace("  " , " ").split(" ");
+                String[] str = line.replace("--","")
+                        .replace("  " , " ")
+                        .replace(".","")
+                        .split(" ");
 
                 if (Objects.equals(str[0], str[1])){
                     System.out.println("Неправильные входные данные");break;
@@ -161,8 +167,8 @@ public class Main {
                 array[i][1] = Integer.parseInt(str[1]);
                 array[i+1][1] = Integer.parseInt(str[0]);
 
-                array[i][2] = (int) Double.parseDouble(str[2]);
-                array[i+1][2] = (int) Double.parseDouble(str[2]);
+                array[i][2] = Integer.parseInt(str[2]);
+                array[i+1][2] = Integer.parseInt(str[2]);
                 i = i + 2;
                 line = reader.readLine();
             }
