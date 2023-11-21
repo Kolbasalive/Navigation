@@ -4,14 +4,21 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    /** Количество рёбер графа * 2 */
+    /**
+     * Количество рёбер графа * 2
+     */
     private static final int SIZE = 71 * 2;
-    /** Номер стартового узла */
-    private static final int startI = 2;
-    /** Номер конечного узла */
-    private static final int endI = 4;
+    /**
+     * Номер стартового узла
+     */
+    private static final int startI = setBuilding(12);
+    /**
+     * Номер конечного узла
+     */
+    private static final int endI = setBuilding(9);
 
     public static void main(String[] args) {
+
         int[][] array = new int[SIZE][3];
 
         HashMap<Integer, Node> graph = createGraph(Objects.requireNonNull(readFile(array)));
@@ -19,28 +26,33 @@ public class Main {
         Node start = graph.get(startI);
         Node end = graph.get(endI);
         LinkedList<Node> linkedList = getShortestPath(graph,
-               start,
+                start,
                 end);
 
-        if (linkedList != null){
+        if (linkedList != null) {
             getNode(linkedList);
-        }else{
+        } else {
             System.out.println("Пути не существует");
         }
+
     }
 
-    /** Вывод пути */
+    /**
+     * Вывод пути
+     */
     public static void getNode(LinkedList<Node> path) {
         int sum = 0;
         for (int i = 0; i < path.size(); i++) {
             System.out.println(path.get(i).value);
-            if (i != path.size()-1)
-            sum += path.get(i).parents.get(path.get(i+1)).weight;
+            if (i != path.size() - 1)
+                sum += path.get(i).parents.get(path.get(i + 1)).weight;
         }
         System.out.println("Длина всего пути: " + sum + " дм.");
     }
 
-    /** Дейкстра */
+    /**
+     * Дейкстра
+     */
     public static LinkedList<Node> getShortestPath(HashMap<Integer, Node> graph, Node start, Node end) {
         HashSet<Node> unprocessedNodes = new HashSet<>();
         HashMap<Node, Integer> timeToNodes = new HashMap<>();
@@ -105,7 +117,9 @@ public class Main {
         return nodeWithMinTimeTolt;
     }
 
-    /** Стартовые данные */
+    /**
+     * Стартовые данные
+     */
     public static void initHashTables(Node start, HashMap<Integer, Node> graph, HashSet<Node> unprocessedNode,
                                       HashMap<Node, Integer> timeToNodes) {
         for (Map.Entry<Integer, Node> mapEntry : graph.entrySet()) {
@@ -116,7 +130,9 @@ public class Main {
         timeToNodes.put(start, 0);
     }
 
-    /** Получение или добавление */
+    /**
+     * Получение или добавление
+     */
     public static Node addOrGetNode(HashMap<Integer, Node> graph, int value) {
         if (value == -1) return null;
         if (graph.containsKey(value)) return graph.get(value);
@@ -126,7 +142,9 @@ public class Main {
         return node;
     }
 
-    /** Генерация графа */
+    /**
+     * Генерация графа
+     */
     public static HashMap<Integer, Node> createGraph(int[][] graphData) {
         HashMap<Integer, Node> graph = new HashMap<>();
         for (int[] row : graphData) {
@@ -153,23 +171,28 @@ public class Main {
 
             int i = 0;
             while (line != null) {
-                String[] str = line.replace("--","")
-                        .replace("  " , " ")
-                        .replace(".","")
+                String[] str = line.replace("--", "")
+                        .replace("  ", " ")
                         .split(" ");
 
-                if (Objects.equals(str[0], str[1])){
-                    System.out.println("Неправильные входные данные");break;
+                if (Objects.equals(str[0], str[1])) {
+                    System.out.println("Неправильные входные данные");
+                    break;
                 }
 
-                array[i][0] = Integer.parseInt(str[0]);
-                array[i+1][0] = Integer.parseInt(str[1]);
+                int node1 = Integer.parseInt(str[0]);
+                int node2 = Integer.parseInt(str[1]);
+                int weight = getWeight(str[2]);
 
-                array[i][1] = Integer.parseInt(str[1]);
-                array[i+1][1] = Integer.parseInt(str[0]);
+                array[i][0] = node1;
+                array[i + 1][0] = node2;
 
-                array[i][2] = Integer.parseInt(str[2]);
-                array[i+1][2] = Integer.parseInt(str[2]);
+                array[i][1] = node2;
+                array[i + 1][1] = node1;
+
+                array[i][2] = weight;
+                array[i + 1][2] = weight;
+
                 i = i + 2;
                 line = reader.readLine();
             }
@@ -178,5 +201,32 @@ public class Main {
             System.out.println(ex.getMessage());
         }
         return null;
+    }
+
+    public static int getWeight(String s) {
+        if (s.contains(".")) return Integer.parseInt(s.replace(".", ""));
+        return Integer.parseInt(s) * 10;
+    }
+
+    /**
+     * Сопоставление корпусов(на вход номер корпуса)
+     */
+    public static int setBuilding(int number) {
+        return switch (number) {
+            case 2 -> 54;
+            case 3 -> 36;
+            case 4 -> 45;
+            case 5 -> 4;
+            case 6 -> 9;
+            case 7 -> 49;
+            case 8 -> 33;
+            case 9 -> 60;
+            case 10 -> 23;
+            case 11 -> 41;
+            case 12 -> 53;
+            case 13 -> 38;
+            case 14 -> 20;
+            default -> 1;
+        };
     }
 }
